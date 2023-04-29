@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: transparent url("./assets/bg.svg") 0% 0% no-repeat padding-box;
+  opacity: 1;
+  color: #fff;
+  font-size: 18px;
+  background-size: cover;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.btn-primary {
+  font-weight: 500;
+  color: #000;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-primary:hover {
+  background-color: #0e1b73;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #0e1b73;
+  font-weight: 500;
+  border-color: #0e1b73;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-secondary:hover {
+  background-color: #fff;
+  color: #0e1b73;
+}
+
+.bg-custom {
+  background: #132992 0% 0% no-repeat padding-box;
+}
+
+
+/* Media Queries */
+
+@media (max-width: 1200px) {
+  .aside-x {
+    margin-top: 20px;
+  }
+
+  .last-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Drop-img {
+    display: block;
+    position: relative;
+
+    top: 0px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rowHero {
+    flex-direction: column-reverse;
+  }
+
+  .heroImg {
+    margin-bottom: 50px;
+  }
+
+  .cr-2-786 {
+    margin-top: 20px;
+    border-radius: 20px;
+  }
+
+  .iconmaster {
+    left: 15%;
+  }
+
+  .box div {
+    left: 30%;
+  
+  }
+}
+
+@media (max-width: 520px) {
+  .for-52 {
+    flex-direction: column;
+  }
+
+  .for-52px {
+    flex-direction: column;
+  }
+
+
+
+  .databtn {
+    flex-direction: column;
+  }
+
+  .databtn Link {
+    margin: 10px 0px;
+  }
+
+  .skill-key {
+    font-size: 14px;
+  }
+
+  .skils h2 {
+    font-size: 14px;
+  }
+
+  .editbtn {
+    font-size: 12px;
+  }
+
+  .Drop-img {
+    height: 200px;
+  }
+
+  .logo-img {
+    width: 100px;
+  }
+
+  .firstbtn {
+    margin-bottom: 18px;
+  }
+
+  .box div {
+    left: 20%;
+   
+  }
+}

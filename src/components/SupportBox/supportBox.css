@@ -1,0 +1,105 @@
+.min_height{
+    min-height: 50vh;
+}
+/* status */
+.status_btn{
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 39px;
+    color: white;
+}
+.Need_Agent{
+    background-color: orange
+}
+.Closed{
+    background-color: #1b3ec4;
+}
+.In_Progress{
+    background-color: #127967;
+}
+
+
+/* status */
+.ticket_issue{
+    background: orange;
+    padding: 10px;
+    border-radius: 10px;
+}
+.modal-content{
+    background-color: #1b3ec4 !important;
+}
+.sc_login{
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+.cp{
+    cursor: pointer;
+}
+.btn_rounded{
+    border-radius: 50px !important;
+}
+.support_content{
+    position: fixed;
+    bottom: 65px;
+    right: 30px;
+    z-index: 9;
+}
+.s_toggle >img{
+    width: 25px;
+    margin-right: 8px;
+}
+.s_toggle >span{
+    color: white;
+}
+.sc_box{
+    width: 380px;
+    background: #1b3ec4;
+    border-radius: 10px;
+    padding: 16px 16px 0px;
+}
+.sc_header{
+    padding-bottom: 10px;
+    align-items: center;
+}
+.sc_header>h5{
+    margin-bottom: 3px;
+}
+.sc_header>h5{
+    margin: 0 !important;
+    padding: 0 !important;
+} 
+.sc_user>img{
+    width: 30px;
+    margin-right: 10px;
+}
+.sc_sms_box{
+    height: 45vh;
+    overflow-y: scroll;
+    position: relative;
+}
+.current_ser_sc{
+    background-color: #0b146382 !important;
+    border-bottom-right-radius: 0px !important;
+}
+.sc_sms_content {
+    max-width: 100%  !important;
+}
+.sc_form{
+    padding: 12px  0 ;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+.sc_form >input{
+    background-color:  #2149dd;
+    color: white;
+    border-radius: 50px;
+}
+.sc_form::placeholder {
+    /* color: #fff !important; Change the placeholder color to gray */
+  }
