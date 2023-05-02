@@ -14,6 +14,7 @@ export const TicketList = () => {
   const address = useSelector((state) => state.login.data.publicAddress);
   const navigate = useNavigate();
   const [activeButton, setActiveButton] = useState("myTickets");
+  const [refrashing, setRefrashing] = useState(false)
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
@@ -38,6 +39,16 @@ export const TicketList = () => {
     }
   }, [address]);
 
+  const refrashList = async () => {
+    if(refrashing)return;
+    setRefrashing(true)
+    await getNeedAgentTickets();
+    if (address) {
+      await getMyTickets();
+    }
+    setRefrashing(false)
+  };
+
   const getNeedAgentTickets = async () => {
     const DIDToken = await getDIDToken();
     let headersList = {
@@ -50,8 +61,7 @@ export const TicketList = () => {
       {
         headers: headersList,
       }
-    );
-    console.log(tickets.data);
+    ); 
     if (tickets.data) {
       settickets(tickets.data);
     }
@@ -121,6 +131,21 @@ export const TicketList = () => {
                 onClick={() => handleButtonClick("needAgent")}
               >
                 Need Agent
+              </Button>
+
+              <Button
+                style={{
+                  borderRadius: "0px",
+                  color: "white",
+                  backgroundColor: "orange",
+                }}
+                onClick={() => refrashList()}
+              >
+                {
+                  refrashing? 
+                "Refrashing..":
+                "Refrash List"
+                }
               </Button>
             </ButtonGroup>
           </div>
@@ -205,7 +230,9 @@ export const TicketList = () => {
                   {myTickets.length < 1 && (
                     <tr>
                       <td colSpan="4">
-                        <h4 className="text-center mt-5">No Tickets Finded</h4>
+                        <h4 className="text-center mt-5">
+                          No Tickets Finded -From Your List
+                        </h4>
                       </td>
                     </tr>
                   )}
@@ -269,7 +296,9 @@ export const TicketList = () => {
                   {tickets.length < 1 && (
                     <tr>
                       <td colSpan="4">
-                        <h4 className="text-center mt-5">No Tickets Finded</h4>
+                        <h4 className="text-center mt-5">
+                          No Tickets Finded -All
+                        </h4>
                       </td>
                     </tr>
                   )}
