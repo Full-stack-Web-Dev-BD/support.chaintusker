@@ -6,6 +6,8 @@ import { ChatBaseURL } from "../utls/constant";
 import { useSelector } from "react-redux";
 import { getDIDToken } from "../web3/magic";
 import { NotFoundPage } from "../pages/NotFoundPage";
+import {TbReload} from 'react-icons/tb'
+
 
 export const TicketList = () => {
   const [tickets, settickets] = useState([]);
@@ -119,7 +121,7 @@ export const TicketList = () => {
                 }}
                 onClick={() => handleButtonClick("myTickets")}
               >
-                My Tickets
+                My Tickets [ {myTickets.length} ]
               </Button>
               <Button
                 style={{
@@ -130,7 +132,7 @@ export const TicketList = () => {
                 }}
                 onClick={() => handleButtonClick("needAgent")}
               >
-                Need Agent
+                Need Agent [ {tickets.length} ]
               </Button>
 
               <Button
@@ -144,7 +146,7 @@ export const TicketList = () => {
                 {
                   refrashing? 
                 "Refrashing..":
-                "Refrash List"
+                <span> Refrash List <TbReload/></span> 
                 }
               </Button>
             </ButtonGroup>
@@ -172,7 +174,6 @@ export const TicketList = () => {
               </tr>
             </thead>
             <tbody>
-              {console.log(myTickets, tickets)}
               {activeButton === "myTickets" && (
                 <>
                   {myTickets.map((request, index) => {

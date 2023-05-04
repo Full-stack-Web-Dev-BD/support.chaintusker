@@ -1,3 +1,16 @@
+.active_cnv_with {
+    position: relative;
+}
+.active_cnv_with::before{
+    position: absolute;
+    content: '';
+    width: 5px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+}
+
 .tstatus1-In_Progress{
     background: orange;
     padding: 1px 10px;
