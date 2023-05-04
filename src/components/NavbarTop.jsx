@@ -27,17 +27,7 @@ export const NavbarTop = () => {
   const getIsAgentInfo = async () => {
     const response = await axios.get(`${ChatBaseURL}/api/auth/find/${address}`);
     setIsAdmin(response.data?.isAgent);
-  };
-  useEffect(() => {
-    if (address) {
-      // registerUser();
-    }
-  }, [address]);
-  const registerUser = async () => {
-    axios.post(`${ChatBaseURL}/api/auth/register-agent`, {
-      publicKey: address,
-    });
-  };
+  }; 
   const logoutMagic = async () => {
     try {
       await magicMumbai.user.logout();

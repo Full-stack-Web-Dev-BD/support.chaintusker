@@ -87,7 +87,7 @@ export const SupportChatPage = () => {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      `${ChatBaseURL}/api/messages/getmsg`,
+      `${ChatBaseURL}/api/messages/get-support-msg`,
       {
         from: address,
         to: currentChat?.user,
@@ -158,7 +158,7 @@ export const SupportChatPage = () => {
       "Content-Type": "application/json",
     };
     await axios.post(
-      `${ChatBaseURL}/api/messages/addmsg`,
+      `${ChatBaseURL}/api/messages/add-support-msg`,
       {
         from: address,
         to: currentChat?.user,
@@ -204,8 +204,10 @@ export const SupportChatPage = () => {
             <div className="template_card chat_user_list chatbox_height ptb_30">
               <div className="ch_userlist_inner">
                 {myTickets.map((user) => (
-                  <div
-                    className="single_chat_user"
+                  <div 
+                    className={`single_chat_user ${
+                      user._id === ticketId ? "active_cnv_with" : ""
+                    } `}
                     key={user._id}
                     onClick={(e) => handleClick(user)}
                   >

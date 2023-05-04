@@ -119,7 +119,7 @@ export const TicketList = () => {
                 }}
                 onClick={() => handleButtonClick("myTickets")}
               >
-                My Tickets
+                My Tickets [ {myTickets.length} ]
               </Button>
               <Button
                 style={{
@@ -130,7 +130,7 @@ export const TicketList = () => {
                 }}
                 onClick={() => handleButtonClick("needAgent")}
               >
-                Need Agent
+                Need Agent [ {tickets.length} ]
               </Button>
 
               <Button
