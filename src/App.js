@@ -20,6 +20,10 @@ import { SupportChatPage } from "./pages/ChatPage/SupportChatPage";
         <Route
           path="resolve-issue/:ticketId"
           element={<ProtectedRoutes Component={SupportChatPage} />}
+        />  
+        <Route
+          path="resolve-issue"
+          element={<ProtectedRoutes Component={SupportChatPage} />}
         />      
         <Route
           path="tickets"

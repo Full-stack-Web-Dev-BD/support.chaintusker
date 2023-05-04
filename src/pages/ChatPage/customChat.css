@@ -1,3 +1,12 @@
+.cp{
+    cursor: pointer;
+}
+.ticket_issue{
+    background: orange;
+    padding: 10px;
+    border-radius: 10px;
+    text-transform: capitalize;
+}
 .active_cnv_with {
     position: relative;
 }
@@ -188,6 +197,7 @@ input:focus {
     display: flex;
     gap: 15px;
     color: white;
+    align-items: center;
 }
 
 .chat_sms_form>input {
