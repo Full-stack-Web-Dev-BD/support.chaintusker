@@ -14,10 +14,8 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUserAstronaut } from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
-import { CiMenuKebab } from "react-icons/ci";
 
 export const SupportChatPage = () => {
-  const [contacts, setContacts] = useState([]);
   const [myAllTicket, setMyAllTicket] = useState([]);
   const [showBlock, setShowBlock] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -31,11 +29,12 @@ export const SupportChatPage = () => {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [GGToken, setGGToken] = useState("");
   const [currentTicket, setCurrentTicket] = useState({});
-  const [initialCNV, setInitialCNV] = useState([])
+  const [initialCNV, setInitialCNV] = useState([]);
 
   useEffect(() => {
     getTicketDetails();
   }, [address, ticketId]);
+
   const getTicketDetails = async () => {
     const DIDToken = await getDIDToken();
     let headersList = {
@@ -43,11 +42,11 @@ export const SupportChatPage = () => {
       token: DIDToken,
       "Content-Type": "application/json",
     };
+    var ticket;
     if (ticketId) {
-      const ticket = await axios.get(
-        `${ChatBaseURL}/api/ticket/find/${ticketId}`,
-        { headers: headersList }
-      );
+      ticket = await axios.get(`${ChatBaseURL}/api/ticket/find/${ticketId}`, {
+        headers: headersList,
+      });
       setCurrentTicket(ticket.data);
     }
     const initialCNV = await axios.get(
@@ -61,7 +60,35 @@ export const SupportChatPage = () => {
       `${ChatBaseURL}/api/ticket/my-supporting-ticket/${address}`,
       { headers: headersList }
     );
-    setMyAllTicket(myTicket.data);
+    if (myTicket.data.length > 0) {
+      setMyAllTicket(myTicket.data);
+    }
+    // -------------
+
+    setMessages([]);
+    setHistoryLoading(true);
+    setGGToken(DIDToken);
+    console.log("fuck ticket is", ticket)
+    if (address) {
+      // const existContact = myAllTicket.find(
+      //   (ticket) => ticket._id === ticketId
+      // );
+      // if (!existContact) {
+      //   navigate("/resolve-issue");
+      //   return;
+      // }
+      await JSON.parse(localStorage.getItem("chat_user"));
+      const response = await axios.post(
+        `${ChatBaseURL}/api/messages/get-support-msg`,
+        {
+          from: address,
+          to: ticket.data.user,
+        },
+        { headers: headersList }
+      );
+      setMessages(response.data);
+    }
+    setHistoryLoading(false);
   };
 
   // screen size
@@ -74,55 +101,6 @@ export const SupportChatPage = () => {
     }
   }, [address]);
 
-  useEffect(() => {
-    if (address) {
-      getHistory();
-    }
-  }, [ticketId, address]);
-
-  const getHistory = async () => {
-    setMessages([]);
-    setHistoryLoading(true);
-    const DIDToken = await getDIDToken();
-    setGGToken(DIDToken);
-
-    let headersList = {
-      Accept: "*/*",
-      token: DIDToken,
-      "Content-Type": "application/json",
-    };
-
-    const userData = await axios.get(
-      `${ChatBaseURL}/api/auth/my-cnv-list/${address}`,
-      {
-        headers: headersList,
-      }
-    );
-    const cnv = userData.data?.cnv;
-    setContacts(cnv);
-
-    if (ticketId) {
-      const existContact = myAllTicket.find(
-        (ticket) => ticket._id === ticketId
-      );
-      if (!existContact) {
-        navigate("/resolve-issue");
-        return;
-      }
-      await JSON.parse(localStorage.getItem("chat_user"));
-      const response = await axios.post(
-        `${ChatBaseURL}/api/messages/get-support-msg`,
-        {
-          from: address,
-          to: currentTicket.user,
-        },
-        { headers: headersList }
-      );
-      setMessages(response.data);
-    }
-    setHistoryLoading(false);
-  };
-
   // init socket to - add user to socket , receive sms
   useEffect(() => {
     if (address) {
@@ -131,10 +109,9 @@ export const SupportChatPage = () => {
       socket.current.on("msg-recieve", (data) => {
         setArrivalMessage({ fromSelf: false, message: data });
       });
-      socket.current.on("get-ping", (data) => {
-        console.log("getPing", data);
-        setContacts(data);
-      });
+      // socket.current.on("get-ping", (data) => {
+      //   console.log("getPing", data);
+      // });
     }
   }, [address]);
 
@@ -318,8 +295,8 @@ export const SupportChatPage = () => {
                     <p className="mt-4 mb-4 ticket_issue text-center">
                       {currentTicket.title}{" "}
                     </p>
-                    
-                    {initialCNV.map((message, index) => (
+
+                    {/* {initialCNV.map((message, index) => (
                       <div
                         ref={scrollRef}
                         key={index}
@@ -351,7 +328,7 @@ export const SupportChatPage = () => {
                           </div>
                         </div>
                       </div>
-                    ))}
+                    ))} */}
 
                     {messages.map((message, index) => (
                       <div
@@ -421,7 +398,7 @@ export const SupportChatPage = () => {
                   ) : (
                     <div className="select_start_chat text-center">
                       <img src="/img/chat.png" alt="img" />
-                      {contacts.length < 1 ? (
+                      {myAllTicket.length < 1 ? (
                         <p>You dont have any conversation yet </p>
                       ) : (
                         <p>Select a conversation and chat away.</p>
