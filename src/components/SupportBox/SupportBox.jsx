@@ -25,7 +25,12 @@ const SupportBox = () => {
   const [currentChat, setCurrentChat] = useState([]);
   const socket = useRef();
   const [ticketInitCnv, setTicketInitCnv] = useState([]);
- 
+  const [GGToken, setGGToken] = useState("");
+
+  async function updateToken() {
+    const DIDToken = await getDIDToken();
+    setGGToken(DIDToken);
+  }
   useEffect(() => {
     if (address) {
       socket.current = io(ChatBaseURL);
@@ -41,21 +46,24 @@ const SupportBox = () => {
   }, [currentChat, ticket]);
 
   const getHistory = async () => {
-    if(ticket){
-      
-    const DIDToken = await getDIDToken();
+    await updateToken();
 
-    let headersList = {
-      Accept: "*/*",
-      token: DIDToken,
-      "Content-Type": "application/json",
-    };
-    const response = await axios.post(`${ChatBaseURL}/api/messages/getmsg`, {
-      from: address,
-      to: ticket.agent,
-    }, {headers:headersList});
-    console.log( "hie  die ",  response.data)
-    setMessages(response.data);
+    if (ticket) {
+      let headersList = {
+        Accept: "*/*",
+        token: DIDToken,
+        "Content-Type": "application/json",
+      };
+      const response = await axios.post(
+        `${ChatBaseURL}/api/messages/getmsg`,
+        {
+          from: address,
+          to: ticket.agent,
+        },
+        { headers: headersList }
+      );
+      console.log("hie  die ", response.data);
+      setMessages(response.data);
     }
   };
 
@@ -75,24 +83,46 @@ const SupportBox = () => {
         msg,
       });
     }
-    
-    const DIDToken = await getDIDToken();
-
     let headersList = {
       Accept: "*/*",
-      token: DIDToken,
+      token: GGToken,
       "Content-Type": "application/json",
     };
-    await axios.post(`${ChatBaseURL}/api/messages/addmsg`, {
-      from: address,
-      to: ticket.agent ? ticket.agent : ticket._id,
-      message: msg,
-    },{headers:headersList});
+    try {
+      await axios.post(
+        `${ChatBaseURL}/api/messages/addmsg`,
+        {
+          from: address,
+          to: ticket.agent ? ticket.agent : ticket._id,
+          message: msg,
+        },
+        { headers: headersList }
+      );
 
-    const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
-    setMessages(msgs);
-    console.log("self sms set ");
+      const msgs = [...messages];
+      msgs.push({ fromSelf: true, message: msg });
+      setMessages(msgs);
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        await updateToken();
+        await axios.post(
+          `${ChatBaseURL}/api/messages/addmsg`,
+          {
+            from: address,
+            to: ticket.agent ? ticket.agent : ticket._id,
+            message: msg,
+          },
+          { headers: headersList }
+        );
+
+        const msgs = [...messages];
+        msgs.push({ fromSelf: true, message: msg });
+        setMessages(msgs);
+      } else {
+        // Handle other errors
+        console.error(error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -111,19 +141,21 @@ const SupportBox = () => {
 
   const getTicket = async () => {
     if (address) {
-      
-    const DIDToken = await getDIDToken();
+      const DIDToken = await getDIDToken();
 
-    let headersList = {
-      Accept: "*/*",
-      token: DIDToken,
-      "Content-Type": "application/json",
-    };
-      const ticket = await axios.get(`${ChatBaseURL}/api/ticket/${address}`,{headers:headersList});
+      let headersList = {
+        Accept: "*/*",
+        token: DIDToken,
+        "Content-Type": "application/json",
+      };
+      const ticket = await axios.get(`${ChatBaseURL}/api/ticket/${address}`, {
+        headers: headersList,
+      });
       setTicket(ticket.data);
 
       const initialCNV = await axios.get(
-        `${ChatBaseURL}/api/ticket/ticketInitCNV/${ticket.data?._id}`,{headers:headersList}
+        `${ChatBaseURL}/api/ticket/ticketInitCNV/${ticket.data?._id}`,
+        { headers: headersList }
       );
       setTicketInitCnv(initialCNV.data);
     }
@@ -158,7 +190,7 @@ const SupportBox = () => {
                         <div className="iq-chat-text">
                           <div className="d-flex align-items-center justify-content-end">
                             <div className="iq-chating-content sc_sms_content d-flex align-items-center current_ser_sc">
-                              <p className="mr-2 mb-0"> { msg.message.text } </p>
+                              <p className="mr-2 mb-0"> {msg.message.text} </p>
                             </div>
                           </div>
                         </div>

@@ -1,4 +1,3 @@
-/* active bar  left side  */
 .active_cnv_with {
     position: relative;
 }
@@ -11,7 +10,6 @@
     bottom: 0;
     background-color: white;
 }
-/* active bar  left side  */
 
 .tstatus1-In_Progress{
     background: orange;

@@ -32,8 +32,10 @@ export const SupportChatPage = () => {
   const address = useSelector((state) => state.login.data.publicAddress);
   const [myTickets, setMyTickets] = useState([]);
   const formattedHTML = `Local Time : ${moment().format("h:mm A")} `;
-
   const navigate = useNavigate();
+  
+  
+  
   useEffect(() => {
     getTicketDetails();
   }, [address, ticketId]);
@@ -204,7 +206,7 @@ export const SupportChatPage = () => {
             <div className="template_card chat_user_list chatbox_height ptb_30">
               <div className="ch_userlist_inner">
                 {myTickets.map((user) => (
-                  <div 
+                  <div                    
                     className={`single_chat_user ${
                       user._id === ticketId ? "active_cnv_with" : ""
                     } `}
