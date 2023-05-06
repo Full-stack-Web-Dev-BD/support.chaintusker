@@ -25,6 +25,9 @@ export const TicketList = () => {
   useEffect(() => {
     if (address) {
       getUserDetails();
+      setInterval(() => {
+        refrashList(false)
+      }, 60*1000);
     }
   }, [address]);
   const getUserDetails = async () => {
@@ -41,9 +44,11 @@ export const TicketList = () => {
     }
   }, [address]);
 
-  const refrashList = async () => {
+  const refrashList = async (udpateUI) => {
     if(refrashing)return;
-    setRefrashing(true)
+    if(udpateUI){
+      setRefrashing(true)
+    }
     await getNeedAgentTickets();
     if (address) {
       await getMyTickets();
@@ -141,7 +146,7 @@ export const TicketList = () => {
                   color: "white",
                   backgroundColor: "orange",
                 }}
-                onClick={() => refrashList()}
+                onClick={() => refrashList(true)}
               >
                 {
                   refrashing? 

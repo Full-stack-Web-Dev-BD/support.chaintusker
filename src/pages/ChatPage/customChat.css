@@ -1,11 +1,6 @@
-.cp{
-    cursor: pointer;
-}
-.ticket_issue{
-    background: orange;
-    padding: 10px;
-    border-radius: 10px;
-    text-transform: capitalize;
+.ch_wrap {
+    border-bottom: 1px solid #3545c9;
+    justify-content: space-between;
 }
 .active_cnv_with {
     position: relative;
@@ -18,17 +13,6 @@
     top: 0;
     bottom: 0;
     background-color: white;
-}
-
-.tstatus1-In_Progress{
-    background: orange;
-    padding: 1px 10px;
-    border-radius: 6px;
-}
-.tstatus1-Need_Agent{
-    background: #0d62e9;
-    padding: 1px 10px;
-    border-radius: 6px;
 }
 .select_start_chat {
     margin: 0;
@@ -117,6 +101,7 @@ input:focus {
 }
 
 .single_chat_user {
+    align-items: center;
     padding: 10px 20px;
     display: flex;
     justify-content: flex-end;
@@ -163,10 +148,12 @@ input:focus {
     height: calc(100vh - 300px);
     overflow-y: scroll;
 }
-
+.bcw{
+    border-color: white;
+}
 /* chatbox_header */
 .chatbox_header {
-    border-bottom: 1px solid #3545c9;
+    /* border-bottom: 1px solid #3545c9; */
     padding-bottom: 10px;
 }
 
@@ -195,9 +182,9 @@ input:focus {
 
 .chat_sms_form {
     display: flex;
+    align-items: center;
     gap: 15px;
     color: white;
-    align-items: center;
 }
 
 .chat_sms_form>input {
