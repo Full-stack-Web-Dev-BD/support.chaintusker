@@ -71,16 +71,17 @@ export const SupportChatPage = () => {
       { headers: headersList }
     );
     setCurrentTicket(userInfo.data);
-    getSMSHistoryBetweenUsers(userInfo.data)
+    await loadInitialCNV()
+    await getSMSHistoryBetweenUsers(userInfo.data);
   };
   const initializeChat = async () => {
     await updateToken();
-    if(address){
+    if (address) {
       await getUserInfo();
     }
     if (myConversationList.length < 1) {
       await getMyConversationList();
-    } 
+    }
     setMessageLoading(false);
   };
   const getMyConversationList = async () => {
@@ -105,10 +106,25 @@ export const SupportChatPage = () => {
       setInitialCNV(initialCNV.data);
     }
   };
+  
+  const loadInitialCNV = async () => {
+    const DIDToken = await getDIDToken(); 
+      let headersList = {
+        Accept: "*/*",
+        token: DIDToken,
+        "Content-Type": "application/json",
+      }; 
+
+      const initialCNV = await axios.get(
+        `${ChatBaseURL}/api/ticket/ticketInitCNV/${ticketId}`,
+        { headers: headersList }
+      );
+      setInitialCNV(initialCNV.data); 
+  };
   const getSMSHistoryBetweenUsers = async (ticketInfo) => {
-    console.log(address, ticketInfo)
+    console.log(address, ticketInfo);
     const DIDToken = await getDIDToken();
-    if (ticketInfo.user && messages.length < 1) { 
+    if (ticketInfo.user && messages.length < 1) {
       let headersList = {
         Accept: "*/*",
         token: DIDToken,
@@ -122,13 +138,10 @@ export const SupportChatPage = () => {
           to: ticketInfo.user,
         },
         { headers: headersList }
-      );
-      console.log("SMS History", response.data)
+      ); 
       if (response.data) {
-        setMessages(response.data);
-        // setConversationVarified(true);
-      } else {
-        // navigate("/chat");
+        setMessages(response.data); 
+      } else { 
       }
     }
   };
@@ -141,13 +154,15 @@ export const SupportChatPage = () => {
   // init socket to - add user to socket , receive sms
   useEffect(() => {
     if (address && currentTicket) {
-      console.log()
+      console.log();
       socket.current = io(ChatBaseURL);
       socket.current.emit("add-user", address);
-      socket.current.on("msg-recieve", (data) => { 
-        console.log(data, currentTicket)
-        console.log(data.from.toLocaleLowerCase(),
-          currentTicket.user.toLocaleLowerCase())
+      socket.current.on("msg-recieve", (data) => {
+        console.log(data, currentTicket);
+        console.log(
+          data.from.toLocaleLowerCase(),
+          currentTicket.user.toLocaleLowerCase()
+        );
         if (
           data.from.toLocaleLowerCase() ==
           currentTicket.user.toLocaleLowerCase()
@@ -214,7 +229,7 @@ export const SupportChatPage = () => {
           message: msg,
         },
         { headers: headersList }
-      ); 
+      );
       const msgs = [...messages];
       msgs.push({ fromSelf: true, message: msg });
       setMessages(msgs);
@@ -238,10 +253,7 @@ export const SupportChatPage = () => {
       setMsg("");
       getMyConversationList();
     }
-  };
-  const reportUser = async (publicKey) => {
-    console.log(ticketId);
-  };
+  }; 
   return (
     <div className="custom_chat_page">
       <NavbarTop />
@@ -268,7 +280,8 @@ export const SupportChatPage = () => {
                     onClick={(e) => {
                       if (ticket._id !== ticketId) {
                         setMessages([]);
-                        navigate(`/resolve-issue/${ticketId}`);
+                        setInitialCNV([])
+                        navigate(`/resolve-issue/${ticket._id}`);
                       }
                     }}
                   >
@@ -282,12 +295,12 @@ export const SupportChatPage = () => {
                     <div className="ch_user_info">
                       <div className="name_time">
                         <span className="ch_username ">
-                          {currentTicket.user.slice(0, 7) +
+                          {ticket.user.slice(0, 7) +
                             "..." +
-                            currentTicket.user.slice(-7)}
+                            ticket.user.slice(-7)}
                         </span>
-                      </div>
-                      {/* <p> {user.timezone}  {moment( new Date().toLocaleString("en-US", { timeZone: user.timezone }), "M/D/YYYY, h:mm:ss A").format("h:mm A")} </p> */}
+                      </div> 
+                      {/* <p> {currentTicket.timezone}  {moment( new Date().toLocaleString("en-US", { timeZone: currentTicket.timezone }), "M/D/YYYY, h:mm:ss A").format("h:mm A")} </p> */}
                     </div>
                     <span className="ch_time ml-auto"></span>
                   </div>
@@ -295,9 +308,11 @@ export const SupportChatPage = () => {
               </div>
             </div>
           </Col>
+          {
+            console.log("my cnasdflk;alsdfk;l>>>", myConversationList )
+          }
           <Col sm={8} xs={12} className="chat_message_body_wrapper">
-            <div className="chat_side  template_card chatbox_height p_15">
-              {/* {ticketId && conversationVarifyed ? ( */}
+            <div className="chat_side  template_card chatbox_height p_15"> 
               {ticketId ? (
                 <>
                   {/* Chat header */}
@@ -316,17 +331,15 @@ export const SupportChatPage = () => {
                               currentTicket.user?.slice(-10)}
                           </h5>
                           <span>
-                            {/* {opponentInfo.timezone ? ( */}
-                            {true ? (
-                              <span>
-                                Time
-                                {/* <MdLocationPin /> {opponentInfo.timezone}{" "}
-                            {moment(
-                              new Date().toLocaleString("en-US", {
-                                timeZone: opponentInfo.timezone,
-                              }),
-                              "M/D/YYYY, h:mm:ss A"
-                            ).format("h:mm A")} */}
+                            {currentTicket.timezone ? (
+                              <span> 
+                                <MdLocationPin /> {currentTicket.timezone} 
+                                {moment(
+                                  new Date().toLocaleString("en-US", {
+                                    timeZone: currentTicket.timezone,
+                                  }),
+                                  "M/D/YYYY, h:mm:ss A"
+                                ).format("h:mm A")}
                               </span>
                             ) : (
                               ""
@@ -337,7 +350,48 @@ export const SupportChatPage = () => {
                     </div>
                   )}
                   {/* Chat Body sms history */}
-                  <div className="chat_sms_body pt-3">
+                  <div className="chat_sms_body pt-3"> 
+                  {initialCNV.map((message, index) => (
+                      <div
+                        ref={scrollRef}
+                        key={index}
+                        className={`iq-message-body mb-3 ${
+                          message.fromSelf ? "iq-current-user" : "iq-other-user"
+                        }`}
+                      >
+                        <div className="chat-profile">
+                          <div className="latterpp">
+                            <span>
+                              <FaUserAstronaut />
+                            </span>
+                          </div>
+                          <small className="iq-chating p-0 mb-0 d-block">
+                            {message.time}
+                          </small>
+                        </div>
+                        <div className="iq-chat-text">
+                          <div
+                            className={`d-flex align-items-center justify-content-${
+                              message.fromSelf ? "end" : "start"
+                            }`}
+                          >
+                            <div className="iq-chating-content d-flex align-items-center ">
+                              <div>
+                                <p className="mr-2 mb-0">{message.message.text} </p>
+                                <p
+                                  style={{
+                                    margin: 0,
+                                    fontSize: "12px",
+                                  }}
+                                >
+                                  {moment(message.createdAt).format("h:mm A")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                     {messages.map((message, index) => (
                       <div
                         ref={scrollRef}
