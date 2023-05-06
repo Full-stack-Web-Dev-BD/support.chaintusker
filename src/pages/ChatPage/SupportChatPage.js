@@ -71,7 +71,7 @@ export const SupportChatPage = () => {
       { headers: headersList }
     );
     setCurrentTicket(userInfo.data);
-    await loadInitialCNV()
+    await loadInitialCNV();
     await getSMSHistoryBetweenUsers(userInfo.data);
   };
   const initializeChat = async () => {
@@ -106,23 +106,22 @@ export const SupportChatPage = () => {
       setInitialCNV(initialCNV.data);
     }
   };
-  
-  const loadInitialCNV = async () => {
-    const DIDToken = await getDIDToken(); 
-      let headersList = {
-        Accept: "*/*",
-        token: DIDToken,
-        "Content-Type": "application/json",
-      }; 
 
-      const initialCNV = await axios.get(
-        `${ChatBaseURL}/api/ticket/ticketInitCNV/${ticketId}`,
-        { headers: headersList }
-      );
-      setInitialCNV(initialCNV.data); 
+  const loadInitialCNV = async () => {
+    const DIDToken = await getDIDToken();
+    let headersList = {
+      Accept: "*/*",
+      token: DIDToken,
+      "Content-Type": "application/json",
+    };
+
+    const initialCNV = await axios.get(
+      `${ChatBaseURL}/api/ticket/ticketInitCNV/${ticketId}`,
+      { headers: headersList }
+    );
+    setInitialCNV(initialCNV.data);
   };
-  const getSMSHistoryBetweenUsers = async (ticketInfo) => {
-    console.log(address, ticketInfo);
+  const getSMSHistoryBetweenUsers = async (ticketInfo) => { 
     const DIDToken = await getDIDToken();
     if (ticketInfo.user && messages.length < 1) {
       let headersList = {
@@ -138,10 +137,10 @@ export const SupportChatPage = () => {
           to: ticketInfo.user,
         },
         { headers: headersList }
-      ); 
+      );
       if (response.data) {
-        setMessages(response.data); 
-      } else { 
+        setMessages(response.data);
+      } else {
       }
     }
   };
@@ -221,7 +220,7 @@ export const SupportChatPage = () => {
         msg,
       });
 
-      const sendmessage = await axios.post(
+       await axios.post(
         `${ChatBaseURL}/api/messages/add-support-msg`,
         {
           from: address,
@@ -253,7 +252,7 @@ export const SupportChatPage = () => {
       setMsg("");
       getMyConversationList();
     }
-  }; 
+  };
   return (
     <div className="custom_chat_page">
       <NavbarTop />
@@ -280,7 +279,7 @@ export const SupportChatPage = () => {
                     onClick={(e) => {
                       if (ticket._id !== ticketId) {
                         setMessages([]);
-                        setInitialCNV([])
+                        setInitialCNV([]);
                         navigate(`/resolve-issue/${ticket._id}`);
                       }
                     }}
@@ -299,7 +298,7 @@ export const SupportChatPage = () => {
                             "..." +
                             ticket.user.slice(-7)}
                         </span>
-                      </div> 
+                      </div>
                       {/* <p> {currentTicket.timezone}  {moment( new Date().toLocaleString("en-US", { timeZone: currentTicket.timezone }), "M/D/YYYY, h:mm:ss A").format("h:mm A")} </p> */}
                     </div>
                     <span className="ch_time ml-auto"></span>
@@ -308,11 +307,8 @@ export const SupportChatPage = () => {
               </div>
             </div>
           </Col>
-          {
-            console.log("my cnasdflk;alsdfk;l>>>", myConversationList )
-          }
           <Col sm={8} xs={12} className="chat_message_body_wrapper">
-            <div className="chat_side  template_card chatbox_height p_15"> 
+            <div className="chat_side  template_card chatbox_height p_15">
               {ticketId ? (
                 <>
                   {/* Chat header */}
@@ -332,8 +328,8 @@ export const SupportChatPage = () => {
                           </h5>
                           <span>
                             {currentTicket.timezone ? (
-                              <span> 
-                                <MdLocationPin /> {currentTicket.timezone} 
+                              <span>
+                                <MdLocationPin /> {currentTicket.timezone}
                                 {moment(
                                   new Date().toLocaleString("en-US", {
                                     timeZone: currentTicket.timezone,
@@ -350,8 +346,17 @@ export const SupportChatPage = () => {
                     </div>
                   )}
                   {/* Chat Body sms history */}
-                  <div className="chat_sms_body pt-3"> 
-                  {initialCNV.map((message, index) => (
+                  <div className="chat_sms_body pt-3">
+                    {currentTicket.title ? (
+                      <div className="ticket_issue mt-2 mb-5"> 
+                        <h5>New Ticket Opened</h5>
+                        <hr /> 
+                        <p className=" mt-2"><i>Issue: {currentTicket.title}</i>  </p>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {initialCNV.map((message, index) => (
                       <div
                         ref={scrollRef}
                         key={index}
@@ -377,7 +382,9 @@ export const SupportChatPage = () => {
                           >
                             <div className="iq-chating-content d-flex align-items-center ">
                               <div>
-                                <p className="mr-2 mb-0">{message.message.text} </p>
+                                <p className="mr-2 mb-0">
+                                  {message.message.text}{" "}
+                                </p>
                                 <p
                                   style={{
                                     margin: 0,
